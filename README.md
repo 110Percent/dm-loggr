@@ -2,6 +2,7 @@
 
 **MAKING A README AT NIGHT WHILE SLEEP-DEPRIVED IS FUN WOOOO**
 
+REMEMBER TO `npm install` or `yarn` or whatever to install dependencies!!
 You gotta like, start the app with `node dm-loggr.js`
 Then it auto-generates config files! Magic!
 Then you pop your token into `./utils/config.js`
