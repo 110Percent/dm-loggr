@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Discord dm-loggr</title>
+        <style type='text/css'>
+            .log {
+                border-top: 1px black solid;
+                padding-bottom: 10px;
+                padding-left: 15px;
+            }
+            .message-info h3 {
+                display: inline-block;
+                margin-top: -10px;
+            }
+            h1 {
+                text-align: center;
+                margin-bottom: 20px;
+                margin-top: 10px;
+            }
+            .messageCreate {
+                background-color: #ccffcc;
+            }
+            .messageDelete {
+                background-color: #ffaaaa
+            }
+            .messageUpdate {
+                background-color: #d5aaff
+            }
+            * {
+                font-family: "Noto Sans Regular", "sans-serif";
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Logs for user %USERID%</h1>
+        %EVENTLOGS%
+    </body>
+</html>
