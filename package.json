@@ -3,6 +3,7 @@
     "discord.js": "^11.1.0",
     "express": "^4.15.3",
     "fs-extra": "^3.0.1",
+    "imageurl-base64": "^1.0.0",
     "json-format": "^1.0.1",
     "moment": "^2.18.1"
   }

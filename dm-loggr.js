@@ -1,8 +1,10 @@
 const express = require('express');
 const fs = require('fs-extra');
+const path = require('path');
 const Discord = require('discord.js');
 const jsonFormat = require('json-format');
 const moment = require('moment');
+const img2b64 = require('imageurl-base64');
 
 var config;
 
@@ -35,6 +37,8 @@ app.get('/logs/:userID', (req, res) => {
         thisHTML = thisHTML.replace('%USERTAG%',logObj.author.username + '#' + logObj.author.discriminator);
         thisHTML = thisHTML.replace('%LOGTIMESTAMP%', logObj.timestamp);
         thisHTML = thisHTML.replace('%CONTENT%',logObj.content);
+        thisHTML = thisHTML.replace('%MSGID%',logObj.id);
+        thisHTML = thisHTML.replace('%AVATAR%',logObj.author.avatar);
         if (logObj.type == 'messageUpdate') {
             thisHTML = thisHTML.replace('%OLDCONTENT%', logObj.oldContent)
         }
@@ -50,6 +54,7 @@ function init() {
     dirStructure();
     config = require('./utils/config.js');
     dClient.login(config.discordToken);
+    app.use('/font', express.static('public/font'));
     app.listen(2793);
 }
 
@@ -110,21 +115,21 @@ function logEvent(eType, msg, oldMsg) {
 
     let logJSON = fs.readJSONSync('./db/' + msg.channel.recipient.id + '.json');
     let thisTimestamp = Date.now();
-
-    logJSON[thisTimestamp] = {
-        type: eType,
-        id: msg.id,
-        timestamp: moment(thisTimestamp).format('dddd, MMMM Do YYYY, h:mm:ss a'),
-        content: msg.cleanContent,
-        oldContent: oldMsg ? oldMsg.cleanContent : null,
-        author: {
-            username: msg.author.username,
-            discriminator: msg.author.discriminator,
-            avatarURL: msg.author.avatarURL
+    img2b64(msg.author.avatarURL, (err, data) => {
+        logJSON[thisTimestamp] = {
+            type: eType,
+            id: msg.id,
+            timestamp: moment(thisTimestamp).format('dddd, MMMM Do YYYY, h:mm:ss a'),
+            content: msg.cleanContent,
+            oldContent: oldMsg ? oldMsg.cleanContent : null,
+            author: {
+                username: msg.author.username,
+                discriminator: msg.author.discriminator,
+                avatar: data.dataUri
+            }
         }
-    }
-
-    fs.writeFileSync('./db/' + msg.channel.recipient.id + '.json', jsonFormat(logJSON));
+        fs.writeFileSync('./db/' + msg.channel.recipient.id + '.json', jsonFormat(logJSON));
+    })
 }
 
 init();
